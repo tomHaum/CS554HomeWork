@@ -1,9 +1,13 @@
 <section class="product col-sm-12 col-md-6 col-lg-4">
     <div class="card" id="{{id}}">
-         <img class="card-img-top" src="/public/img/{{id}}.jpg" alt="Card image cap">
         <div class="card-body">
             <h3 class="card-title">{{name}}</h3>
             <p class="card-text">{{short-description}}</p>
+            <figure class="figure">
+                <img src="{{image-path}}" class="figure-img img-fluid rounded card-img" alt="A photo of a {{name}}.">
+                <figcaption class="figure-caption text-right">Photo by
+                    <a href="{{image-src}}">{{image-author}}</a>.</figcaption>
+            </figure>
             <a class="btn btn-primary" data-toggle="modal" data-target="#{{id}}Modal">More Details</a>
         </div>
     </div>

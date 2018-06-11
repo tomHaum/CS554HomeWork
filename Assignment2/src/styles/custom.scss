@@ -18,10 +18,10 @@ html {
     background-clip: border-box;
 }
 
-p {
+figcaption.figure-caption {
     font-size: $secondary-font-size;
 }
-
+ 
 section.product {
     padding: 5px;
     h3 {
@@ -32,7 +32,7 @@ section.product {
             color: $brand-primary;
         }
     }
-} 
+}  
 
 .card .btn-primary{
     color:white !important; 

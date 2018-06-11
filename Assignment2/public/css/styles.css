@@ -6317,8 +6317,8 @@ html {
   font-size: 14pt;
   background-clip: border-box; }
 
-p {
-  font-size: 5.6; }
+figcaption.figure-caption {
+  font-size: 7pt; }
 
 section.product {
   padding: 5px; }
