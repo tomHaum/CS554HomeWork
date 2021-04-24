@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Socket.IO chat</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	 crossorigin="anonymous">
+	<style>
+		html,
+		body,
+		body>div,
+		body>div>div {
+			height: 100%;
+		}
+
+		body {
+			padding: 2%
+		}
+
+		#messages-container {
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="row">
+		<div class="col-4">
+			<form id="message-form" action="" class="row">
+				<div class="col-10 center-block">
+					<div class="form-group row">
+						<label class="col-lg-4 col-xs-12 form-control-label" for="username">Username: </label>
+						<input id="username" type="text" class="col-lg-8 col-xs-12 form-control" required autofocus/>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-4 col-xs-12 form-control-label" for="m">Message: </label>
+						<input id="m" type="text" autocomplete="off" class="col-lg-8 col-xs-12 form-control" disabled/>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-4 col-xs-12 form-control-label" for="query">Search For: </label>
+						<input id="query" type="text" autocomplete="off" class="col-lg-8 col-xs-12 form-control" disabled/>
+					</div>
+					<div class="d-flex justify-content-between">
+						<div>
+							<button disabled id="send-button">Send</button>
+						</div>
+						<div>
+							<button type="button" id="bottom-button">Scroll to Bottom</button>
+						</div>
+						<div>
+							<button id="login-button">Login</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-8" id="messages-container">
+			<div id="messages">
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	 crossorigin="anonymous"></script> -->
+	<script>
+		var joined = false;
+		var myGuid = '';
+		var username = "";
+		const socket = io('http://localhost:3000/chat');
+		const messages = $("#messages");
+		const usernameInput = $("#username");
+		const messageInput = $("#m");
+		const queryInput = $("#query");
+		const theForm = $("form");
+
+		socket.on('receive-message', function (msg) {
+			messages.append($('<li>').text(msg));
+		});
+
+		socket.on('user guid', (data) => {
+			myGuid = data.guid;
+			username = data.username;
+			usernameInput.attr("disabled", true);
+			queryInput.attr("disabled", false);
+			messageInput.attr("disabled", false);
+			$('#send-button').attr("disabled", false);
+			$('#login-button').attr("disabled", true);
+		});
+		socket.on('message query result', function (result) {
+			console.log(result);
+			var newMessage = $('<div>');
+			newMessage.append($('<div>').text(`${result.username} says: ${result.text}`));
+
+			if (!result.imageData.noResults) {
+				var img = new Image();
+				img.src = result.imageData.image;
+				img.alt = result.query;
+				newMessage.append(img);
+			} else {
+				newMessage.append($('<div>').text('Could not find an image for: ' + result.query));
+			}
+			messages.append(newMessage);
+		});
+
+		socket.on("user joined", (newUser) => {
+			console.log("welcome the new user");
+			console.log(newUser);
+			messages.append($('<div>').append($('<span>').text(`Welcome the new user: ${newUser}`)));
+		});
+
+		theForm.on('keyup keypress', function (e) {
+			var keyCode = e.keyCode || e.which;
+			if (keyCode === 13) {
+				theForm.submit();
+			}
+		});
+		theForm.submit(function () {
+
+			if (!usernameInput.val())
+				return false;
+			if (!joined) {
+				socket.emit("new user", { username: usernameInput.val() });
+				joined = true;
+				return false;
+			}
+			//return false;
+			if (myGuid.length == 0)
+				return false;
+
+
+			let message = {
+				text: messageInput.val(),
+				query: queryInput.val(),
+				username: usernameInput.val()
+			};
+			if (message.text.length == 0) {
+				messageInput.focus();
+				return false;
+			}
+			if (message.query.length == 0) {
+				queryInput.focus();
+				return false;
+			}
+
+			socket.emit('message query', message);
+			messageInput.val('');
+			queryInput.val('');
+			return false;
+		});
+
+		function scroll(height, ele) {
+			this.stop().animate({
+				scrollTop: height
+			}, 1000);
+		};
+		var wtf = $('#messages-container');
+		$("#bottom-button").click(function () {
+			scroll.call(wtf, wtf[0].scrollHeight, this);
+		});
+	</script>
+</body>
+
+</html>
