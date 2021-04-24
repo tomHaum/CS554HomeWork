@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.AppBody {
+  padding: 0 10%;
+}
+
+#login {
+  display: none;
+  text-align: center;
+}
+
+.card{
+  margin-bottom: 30px;
+}
+
+.card-body p{
+  margin-bottom: .1em;
+}
+
+
+.card-body .spotitfy-player iframe{
+  display: block;
+}
+
+.hidden{
+  display: none;
+}
