@@ -1,0 +1,20 @@
+{
+  "name": "assignment5",
+  "version": "1.0.0",
+  "description": "Basic redis app with a worker",
+  "main": "app.js",
+  "scripts": {
+    "startServer": "node server/index.js",
+    "startWorker": "node worker/index.js",
+    "start": "node server/index.js && node worker/index.js"
+  },
+  "author": "Thomas Haumersen",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.0",
+    "express": "~4.16.0",
+    "node-fetch": "^2.1.2",
+    "node-redis-pubsub": "^1.0.2",
+    "node-uuid": "^1.4.7"
+  }
+}
