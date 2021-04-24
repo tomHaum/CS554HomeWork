@@ -1,0 +1,16 @@
+{
+  "name": "assignment3",
+  "version": "1.0.0",
+  "description": "Basic redis app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Thomas Haumersen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "~4.16.0",
+    "redis": "^2.8.0",
+    "redis-server": "^1.2.2"
+  }
+}
